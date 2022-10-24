@@ -2595,7 +2595,7 @@ class MVX_REST_API {
     public function mvx_list_of_pending_transaction() {
         $pending_list = $order_id = [];
         $args = array(
-            'post_type' => 'mvx_transaction',
+            'post_type' => array('mvx_transaction', 'wcmp_transaction'),
             'post_status' => 'mvx_processing',
             'meta_key' => 'transaction_mode',
             'meta_value' => 'direct_bank',
@@ -3922,7 +3922,7 @@ class MVX_REST_API {
             $products = count($get_pending_products->get_posts());
 
         $transactions_args = array(
-            'post_type' => 'mvx_transaction',
+            'post_type' => array('mvx_transaction', 'wcmp_transaction'),
             'post_status' => 'mvx_processing',
             'meta_key' => 'transaction_mode',
             'meta_value' => 'direct_bank',
@@ -4578,7 +4578,7 @@ class MVX_REST_API {
         if ($notes) {
             foreach ($notes as $note) {
                 $notes_data[] = array(
-                    'comment_content'   =>  $note->comment_content,
+                    'comment_content'   => str_replace("wcmp", "mvx", $note->comment_content),
                     'comment_date'   =>  $note->comment_date,
                 );
             }
@@ -4713,6 +4713,30 @@ class MVX_REST_API {
                     wp_delete_post($value_id);
                 }
             }
+        } else if ($value == 'export') {
+            $commissions_data = array();
+            $currency = get_woocommerce_currency();
+            foreach ($commission_list as $commission) {
+                $commission_data = $MVX->postcommission->get_commission($commission);
+                $commission_staus = get_post_meta($commission, '_paid_status', true);
+                $recipient = get_user_meta($commission_data->vendor->id, '_vendor_paypal_email', true) ? get_user_meta($commission_data->vendor->id, '_vendor_paypal_email', true) : $commission_data->vendor->page_title;
+                $commission_amount = get_post_meta( $commission, '_commission_amount', true ) ? get_post_meta( $commission, '_commission_amount', true ) : 0;
+                $shipping_amount = get_post_meta( $commission, '_shipping', true ) ? get_post_meta( $commission, '_shipping', true ) : 0;
+                $tax_amount = get_post_meta( $commission, '_tax', true ) ? get_post_meta( $commission, '_tax', true ) : 0;
+                $commission_total = get_post_meta( $commission, '_commission_total', true ) ? get_post_meta( $commission, '_commission_total', true ) : 0;
+                $commission_order = get_post_meta($commission, '_commission_order_id', true) ? wc_get_order(get_post_meta($commission, '_commission_order_id', true)) : false;
+                if ($commission_order) $currency = $commission_order->get_currency();
+                $commissions_data[] = apply_filters('mvx_vendor_commissions', array(
+                    'Recipient'     =>  $recipient,
+                    'Currency'      =>  $currency,
+                    'Commission'    =>  $commission_amount,
+                    'Shipping'      =>  $shipping_amount,
+                    'Tax'           =>  $tax_amount,
+                    'Total'         =>  $commission_total,
+                    'Status'        =>  $commission_staus
+                ), $commission_data);
+            }
+            return rest_ensure_response($commissions_data);
         }
         return $this->mvx_find_specific_commission();
     }
