@@ -225,7 +225,7 @@ class MVX_REST_API {
             'callback' => array( $this, 'mvx_all_vendor_details' ),
             'permission_callback' => array( $this, 'save_settings_permission' )
         ] );
-        // create vendor
+        // ceate vendor
         register_rest_route( 'mvx_module/v1', '/create_vendor', [
             'methods' => WP_REST_Server::EDITABLE,
             'callback' => array( $this, 'mvx_create_vendor' ),
@@ -811,7 +811,7 @@ class MVX_REST_API {
         $row = '';
         if ($pending_questions) {
             $Q_A_link = admin_url('admin.php?page=mvx#&submenu=work-board&name=question-ans');
-            $row = '<div class="media">
+            $row = '<h2 class="mvx-text-with-right-side-line-wrapper">' . __("Q & A Part", 'multivendorx') . '<hr></h2><div class="media">
                         <div class="media-body">
                             <h4 class="media-heading qna-question">' . wp_trim_words($pending_questions['question_details'], 160, '...') . '</h4>
                             <time class="qna-date">
@@ -893,7 +893,7 @@ class MVX_REST_API {
         $commissions = get_posts($args);
         //mvx-vendor-application-content
         $applcation_data_display = '';
-        $applcation_data_display .= '<h2 class="mvx-text-with-right-side-line-wrapper">' . __("Seller's Latest Activity", 'multivendorx') . '<hr></h2>';
+        //$applcation_data_display .= '<h2 class="mvx-text-with-right-side-line-wrapper">' . __("Seller's Latest Activity", 'multivendorx') . '<hr></h2>';
         $applcation_data_display .= '<div class="note-clm-wrap">';
 
         if ($store_first_id) {
@@ -1006,7 +1006,6 @@ class MVX_REST_API {
         $action = $request->get_param('action') ? $request->get_param('action') : '';
         $id = $request->get_param('id') ? $request->get_param('id') : '';
         $type = $request->get_param('type') ? $request->get_param('type') : '';
-
         if(!empty($id)){
             $user_id = (int)$id;
             $verification_settings = get_user_meta($user_id, 'mvx_vendor_verification_settings', true);
@@ -1068,7 +1067,6 @@ class MVX_REST_API {
         if (in_array('pending', $have_pending_verification) && $get_verification_vendors) {
             foreach ($get_verification_vendors as $get_vendor) {
                 $verification_settings = get_user_meta($get_vendor->ID, 'mvx_vendor_verification_settings', true);
-
                 $addrs = array();
                 if (isset($verification_settings['address_verification']['data']['address_1']) )
                     $addrs['address_1'] = $verification_settings['address_verification']['data']['address_1'];
@@ -1107,6 +1105,8 @@ class MVX_REST_API {
                 $lists[] = array(
                     'id'    =>  $get_vendor->ID,
                     'image' =>  '<img src='.$MVX->plugin_url . 'assets/images/wp-avatar-frau.jpg'.' alt="" class="avatar avatar-32 photo" height="32" width="32"></img>' . $get_vendor->data->display_name,
+                    'address_verified'  => isset($verification_settings['address_verification']['is_verified']) && $verification_settings['address_verification']['is_verified'] == 'verified' ? true : false,
+                    'id_verified'  => isset($verification_settings['id_verification']['is_verified']) && $verification_settings['id_verification']['is_verified'] == 'verified' ? true : false,
                     'address'   =>  WC()->countries->get_formatted_address($addrs),
                     'id_verification'   =>  __('ID Type : ', 'multivendorx').ucwords($id_type) . $file_display,
                     'social'    =>  $file_display_social ? $file_display_social : __('No social data found', 'multivendorx')
@@ -3132,7 +3132,6 @@ class MVX_REST_API {
         ];
         $settings_fields_data['vendor_default_shipping_options']   = $vendor_default_shipping_options;
         $settings_fields_data['shipping_options']  = $shipping_options_list;
-
         $is_block = get_user_meta($vendor_id, '_vendor_turn_off', true);
         $settings_fields_data['vendor-personal'] =   [
             [
@@ -3153,7 +3152,7 @@ class MVX_REST_API {
                 'props'     => array(
                     'required'  => true
                 ),
-                'database_value' => 'password',
+                'database_value' => '$P$BBy/qPu84qp8n2TQ.fFhyJNoru.orT1',
             ],
             [
                 'key'       => 'first_name',
@@ -5443,7 +5442,7 @@ class MVX_REST_API {
                     if (isset($model['user_email']) && !empty($model['user_email'])) {
                         $userdata['user_email'] = isset( $model['user_email'] ) ? sanitize_email( $model['user_email'] ) : '';
                     }
-                    if (isset($model['password']) && !empty($model['password'])) {
+                    if (isset($model['password']) && !empty($model['password']) && $model['password'] != '$P$BBy/qPu84qp8n2TQ.fFhyJNoru.orT1') {
                         $userdata['user_pass'] = isset( $model['password'] ) ? sanitize_text_field( wp_unslash( $model['password'] ) ) : '';
                     }
                     if (isset($model['display_name']['value']) && !empty($model['display_name']['value'])) {

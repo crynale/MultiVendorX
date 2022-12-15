@@ -174,7 +174,7 @@ class MVX_Admin {
                     if (!empty($database_value)) {
                         if (isset($inter_value['key']) && array_key_exists($inter_value['key'], $database_value)) {
                             if (empty($settings_fields[$settings_key][$inter_key]['database_value'])) {
-                               $settings_fields[$settings_key][$inter_key]['database_value'] = mvx_string_wpml($database_value[$inter_value['key']]);
+                               $settings_fields[$settings_key][$inter_key]['database_value'] = $database_value[$inter_value['key']];
                             }
                         }
                     }
@@ -670,14 +670,14 @@ class MVX_Admin {
         );
 
         $columns_vendor = apply_filters('mvx_backend_vendor_table_column', array(
-            /*array(
+            array(
                 'name'      =>  __('Name', 'multivendorx'),
                 'selector'  =>  '',
                 'sortable'  =>  true,
                 'selector_choice'  => "name",
-            ),*/
+            ),
             array(
-                'name'      =>  __('Name', 'multivendorx'),
+                'name'      =>  __('', 'multivendorx'),
                 'selector'  =>  '',
                 'sortable'  =>  true,
                 'cell'  =>  'cell',
@@ -686,13 +686,13 @@ class MVX_Admin {
                 'button'=> true,
                 'last_action'   =>  'eyeicon_trigger'
             ),
-            array(
+            /*array(
                 'name'      =>  __('Email', 'multivendorx'),
                 'selector'  =>  '',
                 'sortable'  =>  true,
                 'selector_choice'  => "email",
-            ),
-           /* array(
+            ),*/
+           /*array(
                 'name'      =>  __('Registered', 'multivendorx'),
                 'selector'  =>  '',
                 'sortable'  =>  true,
@@ -1242,7 +1242,7 @@ class MVX_Admin {
         }
 
         if ( in_array($screen->id, array('edit-shop_order'))) {
-            wp_enqueue_style('mvx_admin_order_css', $MVX->plugin_url . 'assets/admin/css/admin-order.css', array(), $MVX->version);
+            wp_enqueue_style('mvx_admin_order_css', $MVX->plugin_url . 'assets/admin/css/admin-order' . $suffix . '.css', array(), $MVX->version);
         }
         
         //backend spmv
