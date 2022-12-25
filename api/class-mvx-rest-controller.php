@@ -2555,7 +2555,7 @@ class MVX_REST_API {
                 $pending_list[] = array(
                     'id'        =>  $pending_vendor->ID,
                     'vendor_image_src'  =>  get_avatar($pending_vendor->ID, 50),
-                    'vendor_link'   =>  sprintf('?page=%s&ID=%s&name=vendor-personal', 'mvx#&submenu=vendor', $pending_vendor->ID),
+                    'vendor_link'   =>  sprintf('?page=%s&ID=%s&name=vendor-application', 'mvx#&submenu=vendor', $pending_vendor->ID),
                     'vendor'    =>  $question_by = "<img src=' " . $MVX->plugin_url . 'assets/images/wp-avatar-frau.jpg' ."' class='avatar avatar-32 photo' height='32' width='32'>" .$pending_vendor->user_login . "",
                     'vendor_name'    =>  $pending_vendor->user_login,
                 );
@@ -3029,7 +3029,7 @@ class MVX_REST_API {
             $vendor_city = get_user_meta( $user->data->ID, '_vendor_city', true ) ? get_user_meta( $user->data->ID, '_vendor_city', true ) : '';
             $vendor_postcode = get_user_meta( $user->data->ID, '_vendor_postcode', true ) ? get_user_meta( $user->data->ID, '_vendor_postcode', true ) : '';
 
-
+            $vendor_profile_image = get_user_meta( $user->data->ID, '_vendor_profile_image', true ) ? get_user_meta( $user->data->ID, '_vendor_profile_image', true ) : '';
 
 
             $vendor_country_code = get_user_meta( $user->data->ID, '_vendor_country_code', true ) ? get_user_meta( $user->data->ID, '_vendor_country_code', true ) : '';
@@ -3199,7 +3199,7 @@ class MVX_REST_API {
                 'type'    => 'file',
                 'width' =>  75,
                 'height'    => 75,
-                'database_value' => array(),
+                'database_value' => isset($vendor_profile_image) ? $vendor_profile_image : '',
             ],
             [
                 'key'       => 'vendor_active_suspend_button',
@@ -5522,6 +5522,9 @@ class MVX_REST_API {
         }
         if (isset($model['_store_lng']) && !empty($model['_store_lng'])) {
             mvx_update_user_meta($user_id, '_store_lng', wc_clean($model['_store_lng']));
+        }
+        if (isset($model['vendor_profile_image']) && !empty($model['vendor_profile_image'])) {
+            mvx_update_user_meta($user_id, '_vendor_profile_image', $model['vendor_profile_image']);
         }
         
         do_action('mvx_vendor_details_update', $model, $vendor);
