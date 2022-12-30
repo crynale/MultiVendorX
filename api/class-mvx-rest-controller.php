@@ -1758,7 +1758,7 @@ class MVX_REST_API {
                 foreach ($settings_value as $inter_key => $inter_value) {
                     $change_settings_key    =   str_replace("-", "_", $settings_key);
                     $option_name = 'mvx_'.$change_settings_key.'_tab_settings';
-                    $database_value = get_option($option_name) ? get_option($option_name) : array();
+                    $database_value = mvx_get_option($option_name) ? mvx_get_option($option_name) : array();
                     if (!empty($database_value)) {
                         if (isset($inter_value['key']) && array_key_exists($inter_value['key'], $database_value)) {
                             if (empty($settings_fields[$settings_key][$inter_key]['database_value'])) {
@@ -4865,15 +4865,26 @@ class MVX_REST_API {
 
                 $order = wc_get_order($order_id);
                 $vendor_order = ( $order ) ? mvx_get_order( $order->get_id() ) : array();
-                $product_list = '';
-                $vendor_list = '';
-                $net_earning = '';
+                $product_list = $vendor_list = $net_earning = $vendor_link = '';
 
                 // find vendor 
                 $vendor_user_id = get_post_meta($commission_value, '_commission_vendor', true);
+                if ($vendor_user_id) {
+                    $vendor = get_mvx_vendor_by_term($vendor_user_id);
+                    if ($vendor) {
+                        $user = get_userdata(absint($vendor->id));
+                        $vendor_link = sprintf('?page=%s&ID=%s&name=vendor-personal', 'mvx#&submenu=vendor', $vendor->id);
+                        if ($user && in_array('dc_rejected_vendor', $user->roles)) {
+                            $vendor_link = sprintf('?page=%s&ID=%s&name=vendor-application', 'mvx#&submenu=vendor', $vendor->id);
+                        } else if ($user && in_array('dc_pending_vendor', $user->roles)) {
+                            $vendor_link = sprintf('?page=%s&ID=%s&name=vendor-application', 'mvx#&submenu=vendor', $vendor->id);
+                        }
+                    }
+                }
+                
                 if ( $vendor_order ) {
                     $vendor = $vendor_order->get_vendor();
-                    $vendor_list = $vendor ? '<a href="' . esc_url($vendor->permalink) . '">' . $vendor->page_title . '</a>' : '';
+                    $vendor_list = $vendor ? '<a href="' . esc_url($vendor_link) . '">' . $vendor->page_title . '</a>' : '';
                 } else { // BW compatibilities
                     if ($vendor_user_id) {
                         if ($vendor) {
