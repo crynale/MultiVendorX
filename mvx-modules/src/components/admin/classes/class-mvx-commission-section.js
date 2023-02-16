@@ -566,6 +566,7 @@ class MVX_Backend_Commission extends Component {
 	}
 
 	render() {
+		var total_net_earning_count = 0;
 		return (
 			<div className="mvx-general-wrapper mvx-commission">
 				<HeaderSection />
@@ -837,6 +838,20 @@ class MVX_Backend_Commission extends Component {
 														></p>
 													</div>
 												</p>
+												{
+													this.state.commission_details.additional_datas ?
+														<p
+															dangerouslySetInnerHTML={{
+																__html: this.state.commission_details.additional_datas
+																	
+															}}
+														>
+														</p>
+													:
+
+													''
+												}
+
 											</div>
 										</div>
 									</div>
@@ -1315,6 +1330,7 @@ class MVX_Backend_Commission extends Component {
 														)}
 																<td/>
 																<td/>
+																<td/>
 																<td className="mvx-order-label-td">
 																	{
 																		appLocalizer
@@ -1343,6 +1359,8 @@ class MVX_Backend_Commission extends Component {
 																		}}
 																	></div>
 																</td>
+
+
 															</tr>
 														) : (
 															''
@@ -1442,6 +1460,22 @@ class MVX_Backend_Commission extends Component {
 
 
 
+														{
+
+															this.state.commission_details.additional_down_datas.map(
+															(
+																data,
+																index_c
+															) => (
+																<tr
+																	dangerouslySetInnerHTML={{
+																		__html: data
+																			
+																	}}
+																>
+																</tr>
+															))
+														}
 
 
 														<tr>
@@ -1863,6 +1897,14 @@ class MVX_Backend_Commission extends Component {
 									onChange={(e) => this.handleupdatereport(e)}
 								/>
 							</div>
+
+
+							{
+								this.state.datacommission.length > 0 && appLocalizer.total_earning_visible ? this.state.datacommission.map((data_earning, index_earning) => {
+									total_net_earning_count += data_earning.edit_net_earning;
+								}) : '',
+								total_net_earning_count > 0 && appLocalizer.total_earning_visible ? <div className="total-net-earning"> Total Net Earning: {total_net_earning_count} </div> : ''
+							}
 
 							{this.state.columns_commission_list &&
 							this.state.columns_commission_list.length > 0 &&

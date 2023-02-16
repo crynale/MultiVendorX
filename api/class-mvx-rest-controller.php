@@ -4585,8 +4585,7 @@ class MVX_REST_API {
         }
 
         $order_edit_link = sprintf('post.php?post=%s&action=edit', $commission_order_id);
-        //print_r($line_items_details);die;
-        $payment_details = array(
+        $payment_details = apply_filters('mvx_individual_commission_content_filter', array(
             'commission_id' => $commission_id,
             'commission_order_id'   => $commission_order_id,
             'commission_type_object'    =>  $commission_type_object,
@@ -4631,8 +4630,8 @@ class MVX_REST_API {
             'refunded_output'   =>  wc_price(get_post_meta( $commission_id, '_commission_refunded', true ), array('currency' => $order->get_currency())),
             'get_shipping_method'   =>  $order->get_shipping_methods(),
             'notes_data'    =>  $notes_data,
-            'shipping_items_details'    =>  $shipping_items_details
-        );
+            'shipping_items_details'    =>  $shipping_items_details,
+        ));
 
         return rest_ensure_response($payment_details); 
     }
@@ -4944,7 +4943,8 @@ class MVX_REST_API {
                     'net_earning'   =>  $net_earning,
                     'status'        =>  $status_display,
                     'date'          =>  $commission_details->post_modified,
-                    'action'        =>  $action_display
+                    'action'        =>  $action_display,
+                    'edit_net_earning'  => MVX_Commission::commission_totals($commission_value, 'edit')
                 ), $commission_value);
             }
         }
