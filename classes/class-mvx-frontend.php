@@ -438,6 +438,10 @@ class MVX_Frontend {
             wp_enqueue_script('mvx_customer_qna_js');
         }
         if (mvx_is_store_page()) {
+            $MVX->library->load_bootstrap_style_lib();
+            $MVX->library->load_bootstrap_script_lib();
+            $MVX->library->load_vlite_lib();
+            wp_enqueue_script( 'mvx_vlite_js', $frontend_script_path . 'vlite_script' . $suffix . '.js', array('jquery' ), $MVX->version, true );
             wp_enqueue_script('mvx_seller_review_rating_js');
             wp_enqueue_script('frontend_js');
         }
@@ -1144,9 +1148,11 @@ class MVX_Frontend {
         if ( is_object($cart) ){
             foreach ( $cart->get_cart() as $cart_item ){
                 $vendor = get_mvx_product_vendors( $cart_item['product_id'] );
-                $vendor_id = $vendor->id;
-                if ( !empty($vendor_id) ){
-                    array_push($vendors, $vendor_id);
+                if ($vendor) {
+                    $vendor_id = $vendor->id;
+                    if ( !empty($vendor_id) ){
+                        array_push($vendors, $vendor_id);
+                    }
                 }
             }
         }
