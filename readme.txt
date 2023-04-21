@@ -5,7 +5,7 @@ Donate link: https://multivendorx.com/donate
 Requires at least: 4.4
 Tested up to: 6.2
 Requires PHP: 5.6
-Stable tag: 4.0.13
+Stable tag: 4.0.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -59,7 +59,7 @@ Build a **WooCommerce multivendor marketplace** that is compatible with most **W
 
 ##### ✓ **Create Coupons** - Increase your website traffic with an enhanced coupon management system provided by MVX. With this coupon manager vendors can set **coupon codes, create discount codes and promo codes** and **renew** old coupon codes. [To know more about the MVX coupon manager and how it is different from others read here.](https://multivendorx.com/docs/knowladgebase/coupon-management/)
 
-##### ✓ **Multiple Payment Methods** - MultiVendorX offers an impressive range of payment options like **PayPal, MassPay, Direct Bank Transfer and Stripe.** Along with this MVX can integrate any compatible **WooCommerce payment gateway** option of your choice. With all the **eCommerce payment gateways** offered by MVX, the **payment process** becomes seamless. [To learn more about MVX Payments follow this document.](https://multivendorx.com/knowledgebase/payment/)
+##### ✓ **Multiple Payment Methods** - MultiVendorX offers an impressive range of payment options like **PayPal, MassPay, Direct Bank Transfer and Stripe.** Along with this MVX can integrate any compatible **WooCommerce payment gateway** option of your choice. With all the **eCommerce payment gateways** offered by MVX, the **payment process** becomes seamless. [To learn more about MVX Payments follow this document.](https://multivendorx.com/docs/knowledgebase/payment/)
 
 ##### ✓ [**Flexible Shipping** ](https://multivendorx.com/docs/knowladgebase/shipping/)- Make managing shipping more effective and efficient with the MultiVendorX plugin, as we provide you with the option of **vendor shipping**. **This woocommerce marketplace plugin lets** Vendors can charge various **shipping rates based** on weight, country, or product category. Vendors also get the **shipping tracking** option, to track the status of a delivery.
 
@@ -291,6 +291,22 @@ Ans. Obviously, you can! Join in on our [GitHub repository](https://github.com/m
 14. Show Multiple Seller in Single Product.
 
 == Changelog ==
+
+= 4.0.15 - 2023-04-20 =
+* Fix       - WPML error at frontend.
+* Updated   - Language file.
+
+= 4.0.14 - 2023-04-18 =
+* Added     - Compatibility of WooCommerce 7.6.0.
+* Added     - Auto SKU Generator.
+* Fix     	- Datepicker not working #353.
+* Fix     	- Cart Page error  #363
+* Fix     	- WPML issue.
+* Fix       - Query optimization.
+* Dev 		- Added `mvx_action_before_customer_refund_request` action.
+* Dev 		- Added `mvx_action_after_customer_refund_request` action.
+* Dev 		- Added `mvx_action_after_order_notes` action.
+* Updated   - Language file.
 
 = 4.0.13 - 2023-04-04 =
 * Added     - Compatibility of WooCommerce 7.5.1.

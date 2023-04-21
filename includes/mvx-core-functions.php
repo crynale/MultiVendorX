@@ -13,10 +13,10 @@ if (!function_exists('get_mvx_vendor_settings')) {
             return get_mvx_global_settings($key, $default);
         }
         if (empty($key)) {
-            return get_option("mvx_{$tab}_tab_settings", $default);
+            return mvx_get_option("mvx_{$tab}_tab_settings", $default);
         }
         if (!empty($key) && !empty($tab)) {
-            $settings = get_option("mvx_{$tab}_tab_settings", $default);
+            $settings = mvx_get_option("mvx_{$tab}_tab_settings", $default);
         }
         if (!isset($settings[$key]) || empty($settings[$key])) {
             return $default;
@@ -50,7 +50,7 @@ if (!function_exists('get_mvx_global_settings')) {
                 )
         );
         foreach ($all_options as $option_name) {
-            $options = array_merge($options, get_option($option_name, array()));
+            $options = array_merge($options, mvx_get_option($option_name, array()));
         }
         if (empty($key)) {
             return $default;
@@ -84,7 +84,7 @@ if (!function_exists('get_mvx_older_global_settings')) {
                 )
         );
         foreach ($all_options as $option_name) {
-            $options = array_merge($options, get_option($option_name, array()));
+            $options = array_merge($options, mvx_get_option($option_name, array()));
         }
         if (empty($name)) {
             return $options;
@@ -105,7 +105,7 @@ if (!function_exists('update_mvx_vendor_settings')) {
         }
         if (!empty($tab)) {
             $option_name = "mvx_{$tab}_tab_settings";
-            $settings = get_option("mvx_{$tab}_tab_settings");
+            $settings = mvx_get_option("mvx_{$tab}_tab_settings");
         }
         $settings[$key] = $value;
         mvx_update_option($option_name, $settings);
@@ -121,10 +121,10 @@ if (!function_exists('delete_mvx_vendor_settings')) {
         }
         if (!empty($subtab)) {
             $option_name = "mvx_{$tab}_{$subtab}_settings_name";
-            $settings = get_option("mvx_{$tab}_{$subtab}_settings_name");
+            $settings = mvx_get_option("mvx_{$tab}_{$subtab}_settings_name");
         } else {
             $option_name = "mvx_{$tab}_settings_name";
-            $settings = get_option("mvx_{$tab}_settings_name");
+            $settings = mvx_get_option("mvx_{$tab}_settings_name");
         }
         unset($settings[$name]);
         mvx_update_option($option_name, $settings);
@@ -686,7 +686,7 @@ if (!function_exists('activate_mvx_plugin')) {
      * @return void
      */
     function activate_mvx_plugin() {
-        //if (!get_option('dc_product_vendor_plugin_installed')) {
+        //if (!mvx_get_option('dc_product_vendor_plugin_installed')) {
         require_once( 'class-mvx-install.php' );
         new MVX_Install();
         mvx_update_option('dc_product_vendor_plugin_installed', 1);
@@ -718,7 +718,7 @@ if (!function_exists('mvx_check_if_another_vendor_plugin_exits')) {
     function mvx_check_if_another_vendor_plugin_exits() {
         require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
         // deactivate marketplace stripe gateway
-        if (version_compare(get_option('dc_product_vendor_plugin_db_version'), '3.1.0', '<')) {
+        if (version_compare(mvx_get_option('dc_product_vendor_plugin_db_version'), '3.1.0', '<')) {
             
         } else {
             if (is_plugin_active('marketplace-stripe-gateway/marketplace-stripe-gateway.php')) {
@@ -1111,11 +1111,11 @@ if (!function_exists('do_mvx_data_migrate')) {
     function do_mvx_data_migrate($previous_plugin_version = '', $new_plugin_version = '') {
         global $MVX, $wpdb, $wp_roles;
         if ($previous_plugin_version) {
-            if ($previous_plugin_version <= '2.6.0' && !get_option('mvx_database_upgrade')) {
+            if ($previous_plugin_version <= '2.6.0' && !mvx_get_option('mvx_database_upgrade')) {
                 $old_pages = mvx_get_option('mvx_pages_settings_name');
                 if (isset($old_pages['vendor_dashboard'])) {
                     wp_update_post(array('ID' => $old_pages['vendor_dashboard'], 'post_content' => '[mvx_vendor]'));
-                    mvx_update_option('mvx_product_vendor_vendor_page_id', get_option('mvx_product_vendor_vendor_dashboard_page_id'));
+                    mvx_update_option('mvx_product_vendor_vendor_page_id', mvx_get_option('mvx_product_vendor_vendor_dashboard_page_id'));
                     $mvx_product_vendor_vendor_page_id = mvx_get_option('mvx_product_vendor_vendor_page_id');
                     update_mvx_vendor_settings('mvx_vendor', $mvx_product_vendor_vendor_page_id, 'vendor', 'general');
                 }
@@ -5395,6 +5395,98 @@ if (!function_exists('mvx_admin_backend_settings_fields_details')) {
                     ),
                     'database_value' => array(),
                 ],
+                [
+                    'key'       => 'sku_generator_simple',
+                    'type'      => 'select',
+                    'label'     => __( 'Generate Simple / Parent SKUs:', 'multivendorx' ),
+                    'desc'      => __( 'Determine how SKUs for simple, external, or parent products will be generated.', 'multivendorx' ),
+                    'options' => array(
+                        array(
+                            'key'=> "choose_options",
+                            'label'=> __('Choose options', 'multivendorx'),
+                            'value'=> "choose_options",
+                        ),
+                        array(
+                            'key'=> "never",
+                            'label'=> __('Never (let me set them)', 'multivendorx'),
+                            'value'=> "never",
+                        ),
+                        array(
+                            'key'=> "slugs",
+                            'label'=> __('Using the product slug (name)', 'multivendorx'),
+                            'value'=> "slugs",
+                        ),
+                        array(
+                            'key'=> "ids",
+                            'label'=> __('Using the product ID)', 'multivendorx'),
+                            'value'=> "ids",
+                        ),
+                    ),
+                    'database_value' => '',
+                ],
+                [
+                    'key'       => 'sku_generator_variation',
+                    'type'      => 'select',
+                    'label'     => __( 'Generate Variation SKUs:', 'multivendorx' ),
+                    'desc'      => __( 'Determine how SKUs for product variations will be generated.', 'multivendorx' ),
+                    'options' => array(
+                        array(
+                            'key'=> "choose_options",
+                            'label'=> __('Choose options', 'multivendorx'),
+                            'value'=> "choose_options",
+                        ),
+                        array(
+                            'key'=> "never",
+                            'label'=> __('Never (let me set them)', 'multivendorx'),
+                            'value'=> "never",
+                        ),
+                        array(
+                            'key'=> "slugs",
+                            'label'=> __('Using the attribute slugs (names)', 'multivendorx'),
+                            'value'=> "slugs",
+                        ),
+                        array(
+                            'key'=> "ids",
+                            'label'=> __('Using the variation ID)', 'multivendorx'),
+                            'value'=> "ids",
+                        ),
+                    ),
+                    'database_value' => '',
+                ],
+                [
+                    'key'       => 'sku_generator_attribute_spaces',
+                    'type'      => 'select',
+                    'label'     => __( 'Replace spaces in attributes?', 'multivendorx' ),
+                    'desc'      => __( 'Replace spaces in attribute names when used in a SKU.', 'multivendorx' ),
+                    'options' => array(
+                        array(
+                            'key'=> "choose_options",
+                            'label'=> __('Choose options', 'multivendorx'),
+                            'value'=> "choose_options",
+                        ),
+                        array(
+                            'key'=> "no",
+                            'label'=> __('Do not replace spaces in attribute names.', 'multivendorx'),
+                            'value'=> "no",
+                        ),
+                        array(
+                            'key'=> "underscore",
+                            'label'=> __('Replace spaces with underscores', 'multivendorx'),
+                            'value'=> "underscore",
+                        ),
+                        array(
+                            'key'=> "dash",
+                            'label'=> __('Replace spaces with dashes / hyphens', 'multivendorx'),
+                            'value'=> "dash",
+                        ),
+                        array(
+                            'key'=> "none",
+                            'label'=> __('Remove spaces from attribute names', 'multivendorx'),
+                            'value'=> "none",
+                        ),
+                    ),
+                    'database_value' => '',
+                ],
             ],
             'commissions'   =>  [
                 [
@@ -8008,7 +8100,7 @@ if (!function_exists('mvx_list_all_modules')) {
                         'doc_link'     => 'https://multivendorx.com/docs/knowladgebase/mvx-product-addon',
                     ],
                     [
-                        'id'           => 'shipstation',
+                        'id'           => 'shipstation-module',
                         'name'         => __( 'Shipstation', 'multivendorx' ),
                         'description'  => __( 'Shipstation', 'multivendorx' ),
                         'plan'         => apply_filters('is_mvx_pro_plugin_inactive', true) ? 'pro' : 'free',
@@ -8019,7 +8111,6 @@ if (!function_exists('mvx_list_all_modules')) {
                                 'is_active'     => $mvx_pro_is_active,
                             ),
                         ),
-                        'doc_link'     => 'https://multivendorx.com/docs/knowladgebase/mvx-shipstation',
                     ],
                 ]
             ],
