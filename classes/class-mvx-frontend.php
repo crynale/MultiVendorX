@@ -87,7 +87,7 @@ class MVX_Frontend {
 
         if ( get_mvx_vendor_settings('display_product_seller', 'settings_general') && apply_filters('mvx_display_multiple_vendor_notice_at_cart_chekout_page', true) ){
             add_action( 'woocommerce_before_cart', array( &$this, 'message_multiple_vendors_cart' ), 10 );
-            add_filter( 'wc_get_template', array( &$this, 'mvx_template_cart' ), 10, 5 );
+            add_filter( 'woocommerce_locate_template', array( &$this, 'mvx_template_cart' ), 10, 1 );
             add_filter( 'wc_get_template', array( &$this, 'mvx_template_orderdetails' ), 10, 5 );
         }
         //display suborder in mail
@@ -1182,12 +1182,12 @@ class MVX_Frontend {
         return array_unique(array_filter($vendors));
     }
 
-    function mvx_template_cart( $template, $template_name, $args, $template_path, $default_path ) {
+    function mvx_template_cart( $template ) {
         global $MVX;
         $vendorsincart = $this->get_vendors_in_cart();
         if ( count($vendorsincart) > 1 ) {
             if ( 'cart.php' === basename( $template ) ) {
-                $template = $MVX->template->get_template( 'woocommerce/cart/cart.php' );
+                $template = $MVX->plugin_path . 'templates/woocommerce/cart/cart.php';
             }
         }
         return $template;
@@ -1200,7 +1200,7 @@ class MVX_Frontend {
                 $order_id = $args['order_id'];
                 $vendors = $this->get_vendors_of_order($order_id);
                 if ( count($vendors) > 1 ) {
-                    $template = $MVX->template->get_template( 'woocommerce/order/order-details.php', array( 'order_id' => $order_id ) );
+                    $template = $MVX->plugin_path . 'templates/woocommerce/order/order-details.php';
                 }
             }	
         }   
@@ -1215,7 +1215,7 @@ class MVX_Frontend {
                 $order_id = $order->get_id();
                 $vendors = $this->get_vendors_of_order($order_id);
                 if ( count($vendors) > 1 ) {
-                    $template = $MVX->template->get_template( 'woocommerce/emails/email-order-details.php', array( 'order' => $order ) );
+                    $template = $MVX->plugin_path . 'templates/woocommerce/emails/email-order-details.php';
                 }  
             }	
         }
