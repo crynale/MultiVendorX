@@ -806,6 +806,20 @@ class MVX_REST_API {
             'callback' => array( $this, 'mvx_list_of_vendor_order' ),
             'permission_callback' => array( $this, 'save_settings_permission' )
         ] );
+        // create products
+        register_rest_route( 'mvx/v1', '/create_product', [
+            'methods' => WP_REST_Server::EDITABLE,
+            'callback' => array( $this, 'mvx_create_product' ),
+            'permission_callback' => array( $this, 'save_settings_permission' )
+        ] );
+    }
+
+    public function mvx_create_product($request) {
+        $name = $request->get_param('name') ? $request->get_param('name') : '';
+        $regular_price = $request->get_param('regular_price') ? $request->get_param('regular_price') : '';
+        $sku = $request->get_param('sku') ? $request->get_param('sku') : '';
+        $manage_stock = $request->get_param('manage_stock') ? $request->get_param('manage_stock') : '';
+        $post_id = wp_insert_post( array( 'post_title' => $name, 'post_type' => 'product', 'post_status' => 'publish' ) );
     }
 
     public function mvx_list_of_vendor_order($request) {
@@ -5525,7 +5539,7 @@ class MVX_REST_API {
         $all_vendors = $this->mvx_list_all_vendor('');
         if ($all_vendors) {
             foreach ($all_vendors->data as $vendor_key => $vendor_value) {
-                if (stripos($vendor_value['sample_title'], $vendor_name) !== false) {
+                if (stripos($vendor_value['sample_title'], $vendor_name) !== false || stripos($vendor_value['username'], $vendor_name) !== false || stripos($vendor_value['email'], $vendor_name) !== false) {
                     $search_vendor[]    =   $all_vendors->data[$vendor_key];
                 }
             }
