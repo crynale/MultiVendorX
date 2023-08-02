@@ -201,12 +201,15 @@ class MVX_REST_API {
                 ],
             ],
         ] );
-        // save settings page data on database
-        register_rest_route( 'mvx_module/v1', '/save_dashpages', [
-            'methods' => WP_REST_Server::EDITABLE,
-            'callback' => array( $this, 'mvx_save_dashpages' ),
-            'permission_callback' => array( $this, 'save_settings_permission' )
-        ] );
+
+        if (current_user_can('manage_options')) {
+            // save settings page data on database
+            register_rest_route( 'mvx_module/v1', '/save_dashpages', [
+                'methods' => WP_REST_Server::EDITABLE,
+                'callback' => array( $this, 'mvx_save_dashpages' ),
+                'permission_callback' => array( $this, 'save_settings_permission' )
+            ] );
+        }
         // save registration fileds data from settings page
         register_rest_route( 'mvx_module/v1', '/save_registration', [
             'methods' => WP_REST_Server::EDITABLE,
@@ -4918,6 +4921,27 @@ class MVX_REST_API {
         require_once(ABSPATH.'wp-admin/includes/user.php');
         $vendor_ids = $request->get_param('vendor_ids') ? $request->get_param('vendor_ids') : '';
         $select_input = $request->get_param('select_input') ? $request->get_param('select_input') : '';
+
+        if ($select_input == 'delete_user') {
+            if ($vendor_ids && is_array($vendor_ids)) {
+                foreach (wp_list_pluck($vendor_ids, "ID") as $user_id) {
+                    wp_delete_user($user_id);
+                }
+            } elseif ($vendor_ids) {
+                wp_delete_user($vendor_ids);
+            }
+        }
+        if ($select_input == 'delete_vendor') {
+            if ($vendor_ids && is_array($vendor_ids)) {
+                foreach (wp_list_pluck($vendor_ids, "ID") as $vendor_id) {
+                    $user = new WP_User(absint($vendor_id));
+                    $user->set_role('customer');
+                }
+            } elseif ($vendor_ids) {
+                $user = new WP_User(absint($vendor_ids));
+                $user->set_role('customer');
+            }
+        }
 
         if ($select_input == 'delete') {
             if ($vendor_ids && is_array($vendor_ids)) {
