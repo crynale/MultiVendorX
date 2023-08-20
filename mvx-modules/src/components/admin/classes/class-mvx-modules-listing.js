@@ -4,12 +4,12 @@ import axios from 'axios';
 import Select from 'react-select';
 import PuffLoader from 'react-spinners/PuffLoader';
 import { css } from '@emotion/react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import HeaderSection from './class-mvx-page-header';
 import BannerSection from './class-mvx-page-banner';
 
@@ -332,7 +332,6 @@ class MVX_Module_Listing extends Component {
 									</div>
 									
 										<div className="mvx-module-option-row">
-										{console.log(student1.options)}
 											{student1.options.map(
 												(student, index) => (
 													<div className="mvx-module-section-options-list">
@@ -479,59 +478,6 @@ class MVX_Module_Listing extends Component {
 																	></label>
 																</div>
 															</div>
-															<Dialog
-																open={
-																	this.state
-																		.open_model_dynamic[
-																		index
-																	]
-																}
-																onClose={
-																	this
-																		.handleClose_dynamic
-																}
-																aria-labelledby="form-dialog-title"
-															>
-																<DialogTitle id="form-dialog-title">
-																	<div className="mvx-module-dialog-title">
-																		{
-																			appLocalizer
-																				.module_page_string
-																				.module9
-																		}
-																	</div>
-																</DialogTitle>
-																<DialogContent>
-																	<DialogContentText>
-																		<div className="mvx-module-dialog-content">
-																			{
-																				appLocalizer
-																					.module_page_string
-																					.module10
-																			}{' '}
-																			{
-																				student.name
-																			}{' '}
-																			module.
-																		</div>
-																	</DialogContentText>
-																</DialogContent>
-																<DialogActions>
-																	<button
-																		onClick={
-																			this
-																				.handleClose_dynamic
-																		}
-																		color="primary"
-																	>
-																		{
-																			appLocalizer
-																				.module_page_string
-																				.module12
-																		}
-																	</button>
-																</DialogActions>
-															</Dialog>
 														</div>
 													</div>
 												)

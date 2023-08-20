@@ -1,11 +1,11 @@
 === MultiVendorX - MultiVendor Marketplace Solution For WooCommerce ===
-Contributors: wcmp, purnendu, rajsekharchatterjee11
+Contributors: wcmp, purnendu, rajsekharchatterjee11, abhirup23
 Tags: multi vendor marketplace, woocommerce multivendor marketplace, multi seller store, product vendors, best marketplace plugin, multi seller, one product multi seller, woocommerce vendors, ebay, etsy, amazon, commission rate
-Donate link: https://multivendorx.com/donate
+Donate link: http://multivendorx.com/donate/
 Requires at least: 4.4
 Tested up to: 6.2.2
 Requires PHP: 5.6
-Stable tag: 4.0.23
+Stable tag: 4.0.24
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,7 +92,7 @@ Competition requires having the right toolkit. To keep you ahead of your competi
 
 ##### ✓ **Store Inventory** - Business stability can sometimes depend on proper **[inventory control](https://multivendorx.com/docs/knowladgebase/store-inventory/)**. MVX provides you with **inventory software** that helps you keep track of your inventory, set a low stock limit and manage inventory entries when and how required. 
 
-##### ✓ **Buisness Hours and vacation -** MultiVendorX’s dual-purpose business hours and vacation pro module is the right fit for your business. Especially if you want to give your vendors a break every now and then. The vacation module uses a [vacation calendar](https://multivendorx.com/docs/knowladgebase/vacation) that works as a **tracker**, notifying admins of vendor off days. Business hours allow a vendor to display a shop hours widget that displays the opening and closing times of a shop.
+##### ✓ **Buisness Hours and vacation -** MultiVendorX’s dual-purpose business hours and vacation pro module is the right fit for your business. Especially if you want to give your vendors a break every now and then. The vacation module uses a [vacation calendar](https://multivendorx.com/docs/knowladgebase/vacation/) that works as a **tracker**, notifying admins of vendor off days. Business hours allow a vendor to display a shop hours widget that displays the opening and closing times of a shop.
 
 ##### ✓ **[Invoice & Packaging Slip](https://multivendorx.com/docs/knowladgebase/invoice-packing-slip/) ** - MVX provides vendors with a personalized invoice management software that lets them send invoices to their customers. Using this add-on invoices can be automatically generated and sent to the respective user. In addition to this vendors can choose their desired **vendor template** to create their invoice. 
 
@@ -239,7 +239,7 @@ Confused about **how to get started**? Read our Blogs on**e-commerce best practi
 ### Stay Connected
 Stay connected with MultiVendorX and reap benefits like - 
 
-**[Quick Setup QuickStart ](https://multivendorx.com/knowledgebase/admin-multi-step-setup-wizard/)** - Setting up a Marketplace has now become more comfortable with our easy to follow Setup Wizard. 
+**[Quick Setup QuickStart ](https://multivendorx.com/docs/knowledgebase/admin-multi-step-setup-wizard/)** - Setting up a Marketplace has now become more comfortable with our easy to follow Setup Wizard. 
 
 **[A Support team that’s always got your back](https://multivendorx.com/support-forum/)** - MultiVendorX has a round-the-clock support team that is there to help you in case you run into any trouble. 
 
@@ -291,6 +291,13 @@ Ans. Obviously, you can! Join in on our [GitHub repository](https://github.com/m
 14. Show Multiple Seller in Single Product.
 
 == Changelog ==
+
+= 4.0.24 - 2023-08-08 =
+* Fix       - Checkbox flow in vendor registration #468.
+* Fix       - Vendor specific coupon added by admin not working #467.
+* Fix       - Vulnerability issue.
+* Fix       - Order status change option not working on vendor dashboard #465.
+* Updated   - Language file.
 
 = 4.0.23 - 2023-07-25 =
 * Added     - Compatibility of WooCommerce 7.9.0.
